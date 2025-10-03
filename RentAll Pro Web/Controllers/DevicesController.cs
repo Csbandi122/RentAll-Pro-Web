@@ -61,6 +61,8 @@ namespace RentAll_Pro_web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,DeviceName,DeviceTypeId,Serial,Price,RentPrice,Available,Picture,RentCount,Notes")] Device device, IFormFile? pictureFile)
         {
+            ModelState.Remove("DeviceType"); // <-- EZ A JAVÍTÁS
+
             if (ModelState.IsValid)
             {
                 if (pictureFile != null)

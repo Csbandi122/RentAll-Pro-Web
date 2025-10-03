@@ -1,0 +1,101 @@
+﻿@model IEnumerable<RentAll_Pro_web.Data.Models.Rental>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.TicketNr)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RentStart)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RentalDays)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PaymentMode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Comment)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Contract)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Invoice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TotalAmount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReviewEmailSent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ContractEmailSent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.InvoiceEmailSent)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.TicketNr)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Customer.Address)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RentStart)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RentalDays)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PaymentMode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Comment)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Contract)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Invoice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalAmount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReviewEmailSent)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ContractEmailSent)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.InvoiceEmailSent)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
