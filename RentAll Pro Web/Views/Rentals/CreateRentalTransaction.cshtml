@@ -5,32 +5,10 @@
 }
 
 <style>
-    .device-card {
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        padding: 10px;
-        margin-bottom: 15px;
-        text-align: center;
-        cursor: pointer;
-        transition: all 0.2s ease-in-out;
-    }
-
-    .device-card img {
-        max-width: 100%;
-        height: 120px;
-        object-fit: cover;
-        margin-bottom: 10px;
-    }
-
-    .device-card.selected {
-        border-color: #0d6efd;
-        box-shadow: 0 0 10px rgba(13, 110, 253, 0.5);
-        transform: scale(1.03);
-    }
-
-    .device-card .form-check-input {
-        display: none; /* A checkboxot elrejtjük */
-    }
+    .device-card { border: 1px solid #ddd; border-radius: 5px; padding: 10px; margin-bottom: 15px; text-align: center; cursor: pointer; transition: all 0.2s ease-in-out; }
+    .device-card img { max-width: 100%; height: 120px; object-fit: cover; margin-bottom: 10px; }
+    .device-card.selected { border-color: #0d6efd; box-shadow: 0 0 10px rgba(13, 110, 253, 0.5); transform: scale(1.03); }
+    .device-card .form-check-input { display: none; }
 </style>
 
 <h4>@ViewData["Title"]</h4>
@@ -38,58 +16,32 @@
 
 <form asp-action="CreateRentalTransaction" method="post">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
     <div class="row">
         <div class="col-md-5">
             <h5>Bérlés adatai</h5>
             <input type="hidden" asp-for="Rental.Id" />
-
-            <div class="form-group mb-2">
-                <label asp-for="Rental.CustomerId" class="control-label">Ügyfél</label>
-                <select asp-for="Rental.CustomerId" class="form-control" asp-items="@Model.CustomerList">
-                    <option value="">-- Válassz ügyfelet --</option>
-                </select>
-                <span asp-validation-for="Rental.CustomerId" class="text-danger"></span>
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" asp-for="IsNewCustomer" id="newCustomerCheck" />
+                <label class="form-check-label" for="newCustomerCheck">Új ügyfél felvétele</label>
             </div>
-
-            <div class="form-group mb-2">
-                <label asp-for="Rental.TicketNr" class="control-label">Jegy szám</label>
-                <input asp-for="Rental.TicketNr" class="form-control" readonly />
+            <div id="existingCustomerSection">
+                <div class="form-group mb-2"><label asp-for="Rental.CustomerId" class="control-label">Meglévő ügyfél</label><select asp-for="Rental.CustomerId" class="form-control" asp-items="@Model.CustomerList"><option value="">-- Válassz ügyfelet --</option></select><span asp-validation-for="Rental.CustomerId" class="text-danger"></span></div>
             </div>
-
-            <div class="form-group mb-2">
-                <label asp-for="Rental.RentStart" class="control-label">Bérlés kezdete</label>
-                <input asp-for="Rental.RentStart" class="form-control" />
-                <span asp-validation-for="Rental.RentStart" class="text-danger"></span>
+            <div id="newCustomerSection" style="display: none;">
+                <div class="form-group mb-2"><label asp-for="NewCustomer.Name" class="control-label"></label><input asp-for="NewCustomer.Name" class="form-control" /><span asp-validation-for="NewCustomer.Name" class="text-danger"></span></div>
+                <div class="form-group mb-2"><label asp-for="NewCustomer.Email" class="control-label"></label><input asp-for="NewCustomer.Email" class="form-control" /><span asp-validation-for="NewCustomer.Email" class="text-danger"></span></div>
+                <div class="form-group mb-2"><label asp-for="NewCustomer.Zipcode" class="control-label"></label><input asp-for="NewCustomer.Zipcode" class="form-control" /></div>
+                <div class="form-group mb-2"><label asp-for="NewCustomer.City" class="control-label"></label><input asp-for="NewCustomer.City" class="form-control" /></div>
+                <div class="form-group mb-2"><label asp-for="NewCustomer.Address" class="control-label"></label><input asp-for="NewCustomer.Address" class="form-control" /></div>
+                <div class="form-group mb-2"><label asp-for="NewCustomer.IdNumber" class="control-label"></label><input asp-for="NewCustomer.IdNumber" class="form-control" /></div>
             </div>
-            
-            <div class="form-group mb-2">
-                <label asp-for="Rental.RentalDays" class="control-label">Bérlési napok</label>
-                <input asp-for="Rental.RentalDays" class="form-control" />
-                <span asp-validation-for="Rental.RentalDays" class="text-danger"></span>
-            </div>
-
-            <div class="form-group mb-2">
-                <label asp-for="Rental.PaymentMode" class="control-label">Fizetési mód</label>
-                <select asp-for="Rental.PaymentMode" class="form-control">
-                    <option value="Készpénz">Készpénz</option>
-                    <option value="Bankkártya">Bankkártya</option>
-                    <option value="Átutalás">Átutalás</option>
-                </select>
-                <span asp-validation-for="Rental.PaymentMode" class="text-danger"></span>
-            </div>
-            
-            <div class="form-group mb-2">
-                <label asp-for="Rental.TotalAmount" class="control-label">Végösszeg</label>
-                <input asp-for="Rental.TotalAmount" class="form-control" />
-                <span asp-validation-for="Rental.TotalAmount" class="text-danger"></span>
-            </div>
-
-            <div class="form-group mb-2">
-                <label asp-for="Rental.Comment" class="control-label">Megjegyzés</label>
-                <textarea asp-for="Rental.Comment" class="form-control"></textarea>
-            </div>
-
+            <hr />
+            <div class="form-group mb-2"><label asp-for="Rental.TicketNr" class="control-label">Jegy szám</label><input asp-for="Rental.TicketNr" class="form-control" readonly /></div>
+            <div class="form-group mb-2"><label asp-for="Rental.RentStart" class="control-label">Bérlés kezdete</label><input asp-for="Rental.RentStart" class="form-control" /></div>
+            <div class="form-group mb-2"><label asp-for="Rental.RentalDays" class="control-label">Bérlési napok</label><input asp-for="Rental.RentalDays" class="form-control" id="rentalDaysInput" /></div>
+            <div class="form-group mb-2"><label asp-for="Rental.PaymentMode" class="control-label">Fizetési mód</label><select asp-for="Rental.PaymentMode" class="form-control"><option value="Készpénz">Készpénz</option><option value="Bankkártya">Bankkártya</option><option value="Átutalás">Átutalás</option></select></div>
+            <div class="form-group mb-2"><label asp-for="Rental.TotalAmount" class="control-label">Végösszeg</label><input asp-for="Rental.TotalAmount" class="form-control" id="totalAmountInput" readonly /></div>
+            <div class="form-group mb-2"><label asp-for="Rental.Comment" class="control-label">Megjegyzés</label><textarea asp-for="Rental.Comment" class="form-control"></textarea></div>
         </div>
 
         <div class="col-md-7">
@@ -99,7 +51,7 @@
                 @foreach (var device in Model.AvailableDevices)
                 {
                     <div class="col-md-4">
-                        <label class="device-card" for="device-@device.Id">
+                        <label class="device-card" for="device-@device.Id" data-price="@device.RentPrice">
                             <img src="@(string.IsNullOrEmpty(device.Picture) ? "/images/no-image.png" : device.Picture)" alt="@device.DeviceName" />
                             <strong>@device.DeviceName</strong>
                             <p>@device.RentPrice.ToString("C0") / nap</p>
@@ -121,14 +73,54 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // VÁLTOZÓK FELVÉTELE
             const deviceCards = document.querySelectorAll('.device-card');
+            const rentalDaysInput = document.getElementById('rentalDaysInput');
+            const totalAmountInput = document.getElementById('totalAmountInput');
+
+            // FÜGGVÉNY A VÉGÖSSZEG KISZÁMÍTÁSÁRA
+            function calculateTotal() {
+                let total = 0;
+                const rentalDays = parseInt(rentalDaysInput.value) || 1;
+                
+                // Összeadjuk a kiválasztott eszközök árát
+                document.querySelectorAll('.device-card.selected').forEach(function (card) {
+                    total += parseFloat(card.dataset.price);
+                });
+
+                // Frissítjük a végösszeg mezőt
+                totalAmountInput.value = total * rentalDays;
+            }
+
+            // ESEMÉNYKEZELŐK
+            // 1. Eszközre kattintás
             deviceCards.forEach(function (card) {
                 card.addEventListener('click', function () {
                     this.classList.toggle('selected');
                     const checkbox = this.querySelector('.form-check-input');
                     checkbox.checked = !checkbox.checked;
+                    calculateTotal(); // Újraszámoljuk az árat
                 });
             });
+
+            // 2. Bérlési napok számának változása
+            rentalDaysInput.addEventListener('input', calculateTotal);
+
+            // 3. Új ügyfél szekció váltó logika (ez a rész változatlan)
+            const newCustomerCheckbox = document.getElementById('newCustomerCheck');
+            const existingCustomerSection = document.getElementById('existingCustomerSection');
+            const newCustomerSection = document.getElementById('newCustomerSection');
+            function toggleCustomerSections() {
+                if (newCustomerCheckbox.checked) {
+                    existingCustomerSection.style.display = 'none';
+                    newCustomerSection.style.display = 'block';
+                } else {
+                    existingCustomerSection.style.display = 'block';
+                    newCustomerSection.style.display = 'none';
+                }
+            }
+            newCustomerCheckbox.addEventListener('change', toggleCustomerSections);
+            toggleCustomerSections();
         });
     </script>
 }

@@ -99,23 +99,46 @@ namespace RentAll_Pro_Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateRentalTransaction(CreateRentalViewModel viewModel)
         {
-            // Ellenőrizzük, hogy legalább egy eszközt kiválasztott-e
+            // HIBAKEZELÉS LOGIKA
+            // 1. Ha ÚJ ügyfél van, akkor a legördülő menü (CustomerId) nem kötelező.
+            if (viewModel.IsNewCustomer)
+            {
+                ModelState.Remove("Rental.CustomerId");
+            }
+            // 2. Ha MEGLÉVŐ ügyfél van, akkor az új ügyfél mezői nem számítanak.
+            else
+            {
+                ModelState.Remove("NewCustomer.Name");
+                ModelState.Remove("NewCustomer.Zipcode");
+                ModelState.Remove("NewCustomer.City");
+                ModelState.Remove("NewCustomer.Address");
+                ModelState.Remove("NewCustomer.Email");
+                ModelState.Remove("NewCustomer.IdNumber");
+            }
+
             if (viewModel.SelectedDeviceIds == null || !viewModel.SelectedDeviceIds.Any())
             {
                 ModelState.AddModelError("SelectedDeviceIds", "Legalább egy eszközt ki kell választani a bérléshez!");
             }
 
-            // Csak a ViewModel egy részét validáljuk, a többit mi töltjük fel
-            if (ModelState.IsValid && viewModel.SelectedDeviceIds != null && viewModel.SelectedDeviceIds.Any())
+            // MENTÉSI LOGIKA
+            if (ModelState.IsValid)
             {
-                // 1. Mentsük el az új Rental objektumot
-                _context.Rentals.Add(viewModel.Rental);
-                await _context.SaveChangesAsync(); // Elmentjük, hogy megkapja az új ID-ját
+                // 1. LÉPÉS: Ügyfél kezelése
+                if (viewModel.IsNewCustomer)
+                {
+                    _context.Customers.Add(viewModel.NewCustomer);
+                    await _context.SaveChangesAsync();
+                    viewModel.Rental.CustomerId = viewModel.NewCustomer.Id;
+                }
 
-                // 2. Dolgozzuk fel a kiválasztott eszközöket
+                // 2. LÉPÉS: Bérlés mentése (a jegyszámot a ViewModelből kapja meg)
+                _context.Rentals.Add(viewModel.Rental);
+                await _context.SaveChangesAsync();
+
+                // 3. LÉPÉS: Eszközök feldolgozása
                 foreach (var deviceId in viewModel.SelectedDeviceIds)
                 {
-                    // Hozzunk létre egy kapcsolati rekordot
                     var rentalDevice = new RentalDevice
                     {
                         RentalId = viewModel.Rental.Id,
@@ -123,7 +146,6 @@ namespace RentAll_Pro_Web.Controllers
                     };
                     _context.RentalDevices.Add(rentalDevice);
 
-                    // Frissítsük az eszközt: már nem elérhető és növeljük a bérlési számát
                     var device = await _context.Devices.FindAsync(deviceId);
                     if (device != null)
                     {
@@ -133,13 +155,11 @@ namespace RentAll_Pro_Web.Controllers
                     }
                 }
 
-                // 3. Mentsük el az összes változást az adatbázisban
                 await _context.SaveChangesAsync();
-
-                return RedirectToAction(nameof(Index)); // Sikeres mentés után irányítsuk át a listára
+                return RedirectToAction(nameof(Index));
             }
 
-            // Ha hiba történt, töltsük újra az adatokat és jelenítsük meg újra az oldalt
+            // Ha a validáció sikertelen volt, töltsük újra az adatokat és jelenítsük meg a hibákat
             viewModel.CustomerList = new SelectList(await _context.Customers.ToListAsync(), "Id", "Name", viewModel.Rental.CustomerId);
             viewModel.AvailableDevices = await _context.Devices.Where(d => d.Available).ToListAsync();
             return View(viewModel);
