@@ -73,58 +73,35 @@ namespace RentAll_Pro_Web.Controllers
 
         // --- INNEN KEZDŐDIK AZ ÚJ KÓD ---
 
-        // GET: Rentals/CreateRentalTransaction
-        public async Task<IActionResult> CreateRentalTransaction()
-        {
-            var viewModel = new CreateRentalViewModel
-            {
-                // Előkészítjük az új bérlést alapértelmezett adatokkal
-                Rental = new Rental
-                {
-                    RentStart = DateTime.Now,
-                    RentalDays = 1,
-                    TicketNr = "RNT" + DateTime.Now.ToString("yyyyMMddHHmmss")
-                },
-                // Betöltjük a választható ügyfeleket a legördülő listához
-                CustomerList = new SelectList(await _context.Customers.ToListAsync(), "Id", "Name"),
-                // Betöltjük az elérhető eszközöket
-                AvailableDevices = await _context.Devices.Where(d => d.Available).ToListAsync()
-            };
-
-            return View(viewModel);
-        }
-
-        // POST: Rentals/CreateRentalTransaction
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateRentalTransaction(CreateRentalViewModel viewModel)
         {
             // HIBAKEZELÉS LOGIKA
-            // 1. Ha ÚJ ügyfél van, akkor a legördülő menü (CustomerId) nem kötelező.
             if (viewModel.IsNewCustomer)
             {
-                ModelState.Remove("Rental.CustomerId");
+                ModelState.Remove("Rental.CustomerId"); // Ha új az ügyfél, a legördülő nem kötelező
             }
-            // 2. Ha MEGLÉVŐ ügyfél van, akkor az új ügyfél mezői nem számítanak.
             else
             {
+                // Ha meglévő ügyfelet választunk, az új ügyfél mezői nem számítanak
                 ModelState.Remove("NewCustomer.Name");
+                ModelState.Remove("NewCustomer.Email");
                 ModelState.Remove("NewCustomer.Zipcode");
                 ModelState.Remove("NewCustomer.City");
                 ModelState.Remove("NewCustomer.Address");
-                ModelState.Remove("NewCustomer.Email");
                 ModelState.Remove("NewCustomer.IdNumber");
             }
 
             if (viewModel.SelectedDeviceIds == null || !viewModel.SelectedDeviceIds.Any())
             {
-                ModelState.AddModelError("SelectedDeviceIds", "Legalább egy eszközt ki kell választani a bérléshez!");
+                ModelState.AddModelError(nameof(viewModel.SelectedDeviceIds), "Legalább egy eszközt ki kell választani a bérléshez!");
             }
 
             // MENTÉSI LOGIKA
             if (ModelState.IsValid)
             {
-                // 1. LÉPÉS: Ügyfél kezelése
+                // 1. Ügyfél kezelése
                 if (viewModel.IsNewCustomer)
                 {
                     _context.Customers.Add(viewModel.NewCustomer);
@@ -132,26 +109,19 @@ namespace RentAll_Pro_Web.Controllers
                     viewModel.Rental.CustomerId = viewModel.NewCustomer.Id;
                 }
 
-                // 2. LÉPÉS: Bérlés mentése (a jegyszámot a ViewModelből kapja meg)
+                // 2. Bérlés mentése
                 _context.Rentals.Add(viewModel.Rental);
                 await _context.SaveChangesAsync();
 
-                // 3. LÉPÉS: Eszközök feldolgozása
+                // 3. Eszközök hozzárendelése és állapotuk frissítése
                 foreach (var deviceId in viewModel.SelectedDeviceIds)
                 {
-                    var rentalDevice = new RentalDevice
-                    {
-                        RentalId = viewModel.Rental.Id,
-                        DeviceId = deviceId
-                    };
-                    _context.RentalDevices.Add(rentalDevice);
-
+                    _context.RentalDevices.Add(new RentalDevice { RentalId = viewModel.Rental.Id, DeviceId = deviceId });
                     var device = await _context.Devices.FindAsync(deviceId);
                     if (device != null)
                     {
                         device.Available = false;
                         device.RentCount++;
-                        _context.Devices.Update(device);
                     }
                 }
 

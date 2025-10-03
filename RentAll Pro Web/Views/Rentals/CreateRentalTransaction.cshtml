@@ -1,4 +1,5 @@
-﻿@model RentAll_Pro_Web.ViewModels.CreateRentalViewModel
+﻿@using System.Globalization
+@model RentAll_Pro_Web.ViewModels.CreateRentalViewModel
 
 @{
     ViewData["Title"] = "Új bérlés rögzítése";
@@ -15,7 +16,7 @@
 <hr />
 
 <form asp-action="CreateRentalTransaction" method="post">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div asp-validation-summary="All" class="text-danger"></div>
     <div class="row">
         <div class="col-md-5">
             <h5>Bérlés adatai</h5>
@@ -50,8 +51,10 @@
             <div class="row" style="max-height: 600px; overflow-y: auto;">
                 @foreach (var device in Model.AvailableDevices)
                 {
+                    // EZ A JAVÍTÁS LÉNYEGE!
+                    // A data-price-nak pontot kell tartalmaznia, nem vesszőt.
                     <div class="col-md-4">
-                        <label class="device-card" for="device-@device.Id" data-price="@device.RentPrice">
+                        <label class="device-card" for="device-@device.Id" data-price="@device.RentPrice.ToString(CultureInfo.InvariantCulture)">
                             <img src="@(string.IsNullOrEmpty(device.Picture) ? "/images/no-image.png" : device.Picture)" alt="@device.DeviceName" />
                             <strong>@device.DeviceName</strong>
                             <p>@device.RentPrice.ToString("C0") / nap</p>
@@ -73,40 +76,30 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // VÁLTOZÓK FELVÉTELE
             const deviceCards = document.querySelectorAll('.device-card');
             const rentalDaysInput = document.getElementById('rentalDaysInput');
             const totalAmountInput = document.getElementById('totalAmountInput');
 
-            // FÜGGVÉNY A VÉGÖSSZEG KISZÁMÍTÁSÁRA
             function calculateTotal() {
                 let total = 0;
                 const rentalDays = parseInt(rentalDaysInput.value) || 1;
-                
-                // Összeadjuk a kiválasztott eszközök árát
                 document.querySelectorAll('.device-card.selected').forEach(function (card) {
                     total += parseFloat(card.dataset.price);
                 });
-
-                // Frissítjük a végösszeg mezőt
                 totalAmountInput.value = total * rentalDays;
             }
 
-            // ESEMÉNYKEZELŐK
-            // 1. Eszközre kattintás
             deviceCards.forEach(function (card) {
                 card.addEventListener('click', function () {
                     this.classList.toggle('selected');
                     const checkbox = this.querySelector('.form-check-input');
                     checkbox.checked = !checkbox.checked;
-                    calculateTotal(); // Újraszámoljuk az árat
+                    calculateTotal();
                 });
             });
 
-            // 2. Bérlési napok számának változása
             rentalDaysInput.addEventListener('input', calculateTotal);
 
-            // 3. Új ügyfél szekció váltó logika (ez a rész változatlan)
             const newCustomerCheckbox = document.getElementById('newCustomerCheck');
             const existingCustomerSection = document.getElementById('existingCustomerSection');
             const newCustomerSection = document.getElementById('newCustomerSection');
