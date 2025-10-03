@@ -1,67 +1,67 @@
-﻿@model RentAll_Pro_Web.Data.Models.Device
+﻿@using System.Globalization
+@model RentAll_Pro_Web.ViewModels.CreateServiceViewModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Új szerviz bejegyzés";
 }
 
-<h1>Create</h1>
+<style>
+    .device-card { border: 1px solid #ddd; border-radius: 5px; padding: 10px; margin-bottom: 15px; text-align: center; cursor: pointer; transition: all 0.2s ease-in-out; }
+    .device-card img { max-width: 100%; height: 120px; object-fit: cover; margin-bottom: 10px; }
+    .device-card.selected { border-color: #0d6efd; box-shadow: 0 0 10px rgba(13, 110, 253, 0.5); transform: scale(1.03); }
+    .device-card .form-check-input { display: none; }
+</style>
 
-<h4>Device</h4>
+<h4>@ViewData["Title"]</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="DeviceName" class="control-label"></label>
-                <input asp-for="DeviceName" class="form-control" />
-                <span asp-validation-for="DeviceName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DeviceTypeId" class="control-label"></label>
-                <select asp-for="DeviceTypeId" class ="form-control" asp-items="ViewBag.DeviceTypeId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Serial" class="control-label"></label>
-                <input asp-for="Serial" class="form-control" />
-                <span asp-validation-for="Serial" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RentPrice" class="control-label"></label>
-                <input asp-for="RentPrice" class="form-control" />
-                <span asp-validation-for="RentPrice" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Available" /> @Html.DisplayNameFor(model => model.Available)
-                </label>
-            </div>
-            <div class="form-group">
-    <label class="control-label">Picture</label>
-    <input type="file" name="pictureFile" class="form-control" />
-</div>
-            
-            <div class="form-group">
-                <label asp-for="Notes" class="control-label"></label>
-                <input asp-for="Notes" class="form-control" />
-                <span asp-validation-for="Notes" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+<form asp-action="Create">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="row">
+        <div class="col-md-5">
+            <h5>Szerviz adatai</h5>
+            <div class="form-group mb-2"><label asp-for="Service.TicketNr" class="control-label"></label><input asp-for="Service.TicketNr" class="form-control" readonly /></div>
+            <div class="form-group mb-2"><label asp-for="Service.ServiceType" class="control-label"></label><input asp-for="Service.ServiceType" class="form-control" /></div>
+            <div class="form-group mb-2"><label asp-for="Service.Description" class="control-label"></label><textarea asp-for="Service.Description" class="form-control"></textarea></div>
+            <div class="form-group mb-2"><label asp-for="Service.Technician" class="control-label"></label><input asp-for="Service.Technician" class="form-control" /></div>
+            <div class="form-group mb-2"><label asp-for="Service.ServiceDate" class="control-label"></label><input asp-for="Service.ServiceDate" class="form-control" /></div>
+            <div class="form-group mb-2"><label asp-for="Service.CostAmount" class="control-label"></label><input asp-for="Service.CostAmount" class="form-control" /></div>
+        </div>
+
+        <div class="col-md-7">
+            <h5>Szervizelt eszközök</h5>
+            <div class="row" style="max-height: 600px; overflow-y: auto;">
+                @foreach (var device in Model.AllDevices)
+                {
+                    <div class="col-md-4">
+                        <div class="device-card">
+                            <img src="@(string.IsNullOrEmpty(device.Picture) ? "/images/no-image.png" : device.Picture)" alt="@device.DeviceName" />
+                            <strong>@device.DeviceName</strong>
+                            <p>@device.Serial</p>
+                            <input type="checkbox" name="SelectedDeviceIds" value="@device.Id" class="form-check-input" />
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="form-group mt-4">
+        <input type="submit" value="Mentés" class="btn btn-primary" />
+        <a asp-action="Index" class="btn btn-secondary">Mégse</a>
+    </div>
+</form>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.device-card').forEach(card => {
+                card.addEventListener('click', function () {
+                    this.classList.toggle('selected');
+                    const checkbox = this.querySelector('.form-check-input');
+                    checkbox.checked = !checkbox.checked;
+                });
+            });
+        });
+    </script>
 }

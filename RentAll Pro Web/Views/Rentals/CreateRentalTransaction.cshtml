@@ -26,11 +26,11 @@
                 <label class="form-check-label" for="newCustomerCheck">Új ügyfél felvétele</label>
             </div>
             <div id="existingCustomerSection">
-                <div class="form-group mb-2"><label asp-for="Rental.CustomerId" class="control-label">Meglévő ügyfél</label><select asp-for="Rental.CustomerId" class="form-control" asp-items="@Model.CustomerList"><option value="">-- Válassz ügyfelet --</option></select><span asp-validation-for="Rental.CustomerId" class="text-danger"></span></div>
+                <div class="form-group mb-2"><label asp-for="Rental.CustomerId" class="control-label">Meglévő ügyfél</label><select asp-for="Rental.CustomerId" class="form-control" asp-items="@Model.CustomerList"><option value="">-- Válassz ügyfelet --</option></select></div>
             </div>
             <div id="newCustomerSection" style="display: none;">
-                <div class="form-group mb-2"><label asp-for="NewCustomer.Name" class="control-label"></label><input asp-for="NewCustomer.Name" class="form-control" /><span asp-validation-for="NewCustomer.Name" class="text-danger"></span></div>
-                <div class="form-group mb-2"><label asp-for="NewCustomer.Email" class="control-label"></label><input asp-for="NewCustomer.Email" class="form-control" /><span asp-validation-for="NewCustomer.Email" class="text-danger"></span></div>
+                <div class="form-group mb-2"><label asp-for="NewCustomer.Name" class="control-label"></label><input asp-for="NewCustomer.Name" class="form-control" /></div>
+                <div class="form-group mb-2"><label asp-for="NewCustomer.Email" class="control-label"></label><input asp-for="NewCustomer.Email" class="form-control" /></div>
                 <div class="form-group mb-2"><label asp-for="NewCustomer.Zipcode" class="control-label"></label><input asp-for="NewCustomer.Zipcode" class="form-control" /></div>
                 <div class="form-group mb-2"><label asp-for="NewCustomer.City" class="control-label"></label><input asp-for="NewCustomer.City" class="form-control" /></div>
                 <div class="form-group mb-2"><label asp-for="NewCustomer.Address" class="control-label"></label><input asp-for="NewCustomer.Address" class="form-control" /></div>
@@ -51,15 +51,13 @@
             <div class="row" style="max-height: 600px; overflow-y: auto;">
                 @foreach (var device in Model.AvailableDevices)
                 {
-                    // EZ A JAVÍTÁS LÉNYEGE!
-                    // A data-price-nak pontot kell tartalmaznia, nem vesszőt.
                     <div class="col-md-4">
-                        <label class="device-card" for="device-@device.Id" data-price="@device.RentPrice.ToString(CultureInfo.InvariantCulture)">
+                        <div class="device-card" data-price="@device.RentPrice.ToString(CultureInfo.InvariantCulture)">
                             <img src="@(string.IsNullOrEmpty(device.Picture) ? "/images/no-image.png" : device.Picture)" alt="@device.DeviceName" />
                             <strong>@device.DeviceName</strong>
                             <p>@device.RentPrice.ToString("C0") / nap</p>
-                            <input type="checkbox" name="SelectedDeviceIds" value="@device.Id" id="device-@device.Id" class="form-check-input" />
-                        </label>
+                            <input type="checkbox" name="SelectedDeviceIds" value="@device.Id" class="form-check-input" />
+                        </div>
                     </div>
                 }
             </div>
@@ -83,26 +81,35 @@
             function calculateTotal() {
                 let total = 0;
                 const rentalDays = parseInt(rentalDaysInput.value) || 1;
+                
                 document.querySelectorAll('.device-card.selected').forEach(function (card) {
-                    total += parseFloat(card.dataset.price);
+                    const price = parseFloat(card.dataset.price);
+                    if (!isNaN(price)) {
+                        total += price;
+                    }
                 });
-                totalAmountInput.value = total * rentalDays;
+                totalAmountInput.value = (total * rentalDays).toFixed(2);
             }
 
             deviceCards.forEach(function (card) {
                 card.addEventListener('click', function () {
                     this.classList.toggle('selected');
                     const checkbox = this.querySelector('.form-check-input');
-                    checkbox.checked = !checkbox.checked;
+                    if (checkbox) {
+                        checkbox.checked = !checkbox.checked;
+                    }
                     calculateTotal();
                 });
             });
 
-            rentalDaysInput.addEventListener('input', calculateTotal);
+            if (rentalDaysInput) {
+                rentalDaysInput.addEventListener('input', calculateTotal);
+            }
 
             const newCustomerCheckbox = document.getElementById('newCustomerCheck');
             const existingCustomerSection = document.getElementById('existingCustomerSection');
             const newCustomerSection = document.getElementById('newCustomerSection');
+
             function toggleCustomerSections() {
                 if (newCustomerCheckbox.checked) {
                     existingCustomerSection.style.display = 'none';
@@ -112,8 +119,11 @@
                     newCustomerSection.style.display = 'none';
                 }
             }
-            newCustomerCheckbox.addEventListener('change', toggleCustomerSections);
-            toggleCustomerSections();
+
+            if (newCustomerCheckbox) {
+                newCustomerCheckbox.addEventListener('change', toggleCustomerSections);
+                toggleCustomerSections();
+            }
         });
     </script>
 }
