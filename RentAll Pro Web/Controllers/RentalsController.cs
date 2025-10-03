@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using RentAll_Pro_web.Data;
-using RentAll_Pro_web.Data.Models;
-using RentAll_Pro_web.ViewModels;
+using RentAll_Pro_Web.Data;
+using RentAll_Pro_Web.Data.Models;
+using RentAll_Pro_Web.ViewModels;
 
 namespace RentAll_Pro_Web.Controllers
 {

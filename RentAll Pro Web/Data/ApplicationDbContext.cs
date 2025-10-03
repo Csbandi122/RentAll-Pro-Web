@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using RentAll_Pro_web.Data.Models;
+using RentAll_Pro_Web.Data.Models;
 
-namespace RentAll_Pro_web.Data
+namespace RentAll_Pro_Web.Data
 {
     public class ApplicationDbContext : DbContext
     {

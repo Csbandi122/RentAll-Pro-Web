@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using RentAll_Pro_web.Data;
+using RentAll_Pro_Web.Data;
 
 #nullable disable
 
@@ -20,7 +20,7 @@ namespace RentAll_Pro_Web.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.6");
 
-            modelBuilder.Entity("RentAll_Pro_web.Data.Models.Customer", b =>
+            modelBuilder.Entity("RentAll_Pro_Web.Data.Models.Customer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -58,7 +58,7 @@ namespace RentAll_Pro_Web.Migrations
                     b.ToTable("Customers");
                 });
 
-            modelBuilder.Entity("RentAll_Pro_web.Data.Models.Device", b =>
+            modelBuilder.Entity("RentAll_Pro_Web.Data.Models.Device", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -100,7 +100,7 @@ namespace RentAll_Pro_Web.Migrations
                     b.ToTable("Devices");
                 });
 
-            modelBuilder.Entity("RentAll_Pro_web.Data.Models.DeviceType", b =>
+            modelBuilder.Entity("RentAll_Pro_Web.Data.Models.DeviceType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -115,7 +115,7 @@ namespace RentAll_Pro_Web.Migrations
                     b.ToTable("DeviceTypes");
                 });
 
-            modelBuilder.Entity("RentAll_Pro_web.Data.Models.Financial", b =>
+            modelBuilder.Entity("RentAll_Pro_Web.Data.Models.Financial", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -150,7 +150,7 @@ namespace RentAll_Pro_Web.Migrations
                     b.ToTable("Financials");
                 });
 
-            modelBuilder.Entity("RentAll_Pro_web.Data.Models.FinancialDevice", b =>
+            modelBuilder.Entity("RentAll_Pro_Web.Data.Models.FinancialDevice", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -171,7 +171,7 @@ namespace RentAll_Pro_Web.Migrations
                     b.ToTable("FinancialDevices");
                 });
 
-            modelBuilder.Entity("RentAll_Pro_web.Data.Models.Rental", b =>
+            modelBuilder.Entity("RentAll_Pro_Web.Data.Models.Rental", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -222,7 +222,7 @@ namespace RentAll_Pro_Web.Migrations
                     b.ToTable("Rentals");
                 });
 
-            modelBuilder.Entity("RentAll_Pro_web.Data.Models.RentalDevice", b =>
+            modelBuilder.Entity("RentAll_Pro_Web.Data.Models.RentalDevice", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -243,7 +243,7 @@ namespace RentAll_Pro_Web.Migrations
                     b.ToTable("RentalDevices");
                 });
 
-            modelBuilder.Entity("RentAll_Pro_web.Data.Models.Service", b =>
+            modelBuilder.Entity("RentAll_Pro_Web.Data.Models.Service", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -276,7 +276,7 @@ namespace RentAll_Pro_Web.Migrations
                     b.ToTable("Services");
                 });
 
-            modelBuilder.Entity("RentAll_Pro_web.Data.Models.ServiceDevice", b =>
+            modelBuilder.Entity("RentAll_Pro_Web.Data.Models.ServiceDevice", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -297,7 +297,7 @@ namespace RentAll_Pro_Web.Migrations
                     b.ToTable("ServiceDevices");
                 });
 
-            modelBuilder.Entity("RentAll_Pro_web.Data.Models.Setting", b =>
+            modelBuilder.Entity("RentAll_Pro_Web.Data.Models.Setting", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -366,9 +366,9 @@ namespace RentAll_Pro_Web.Migrations
                     b.ToTable("Settings");
                 });
 
-            modelBuilder.Entity("RentAll_Pro_web.Data.Models.Device", b =>
+            modelBuilder.Entity("RentAll_Pro_Web.Data.Models.Device", b =>
                 {
-                    b.HasOne("RentAll_Pro_web.Data.Models.DeviceType", "DeviceType")
+                    b.HasOne("RentAll_Pro_Web.Data.Models.DeviceType", "DeviceType")
                         .WithMany("Devices")
                         .HasForeignKey("DeviceTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -377,15 +377,15 @@ namespace RentAll_Pro_Web.Migrations
                     b.Navigation("DeviceType");
                 });
 
-            modelBuilder.Entity("RentAll_Pro_web.Data.Models.FinancialDevice", b =>
+            modelBuilder.Entity("RentAll_Pro_Web.Data.Models.FinancialDevice", b =>
                 {
-                    b.HasOne("RentAll_Pro_web.Data.Models.Device", "Device")
+                    b.HasOne("RentAll_Pro_Web.Data.Models.Device", "Device")
                         .WithMany("FinancialDevices")
                         .HasForeignKey("DeviceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RentAll_Pro_web.Data.Models.Financial", "Financial")
+                    b.HasOne("RentAll_Pro_Web.Data.Models.Financial", "Financial")
                         .WithMany("FinancialDevices")
                         .HasForeignKey("FinancialId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -396,9 +396,9 @@ namespace RentAll_Pro_Web.Migrations
                     b.Navigation("Financial");
                 });
 
-            modelBuilder.Entity("RentAll_Pro_web.Data.Models.Rental", b =>
+            modelBuilder.Entity("RentAll_Pro_Web.Data.Models.Rental", b =>
                 {
-                    b.HasOne("RentAll_Pro_web.Data.Models.Customer", "Customer")
+                    b.HasOne("RentAll_Pro_Web.Data.Models.Customer", "Customer")
                         .WithMany("Rentals")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -407,15 +407,15 @@ namespace RentAll_Pro_Web.Migrations
                     b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("RentAll_Pro_web.Data.Models.RentalDevice", b =>
+            modelBuilder.Entity("RentAll_Pro_Web.Data.Models.RentalDevice", b =>
                 {
-                    b.HasOne("RentAll_Pro_web.Data.Models.Device", "Device")
+                    b.HasOne("RentAll_Pro_Web.Data.Models.Device", "Device")
                         .WithMany("RentalDevices")
                         .HasForeignKey("DeviceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RentAll_Pro_web.Data.Models.Rental", "Rental")
+                    b.HasOne("RentAll_Pro_Web.Data.Models.Rental", "Rental")
                         .WithMany("RentalDevices")
                         .HasForeignKey("RentalId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -426,15 +426,15 @@ namespace RentAll_Pro_Web.Migrations
                     b.Navigation("Rental");
                 });
 
-            modelBuilder.Entity("RentAll_Pro_web.Data.Models.ServiceDevice", b =>
+            modelBuilder.Entity("RentAll_Pro_Web.Data.Models.ServiceDevice", b =>
                 {
-                    b.HasOne("RentAll_Pro_web.Data.Models.Device", "Device")
+                    b.HasOne("RentAll_Pro_Web.Data.Models.Device", "Device")
                         .WithMany("ServiceDevices")
                         .HasForeignKey("DeviceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RentAll_Pro_web.Data.Models.Service", "Service")
+                    b.HasOne("RentAll_Pro_Web.Data.Models.Service", "Service")
                         .WithMany("ServiceDevices")
                         .HasForeignKey("ServiceId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -445,12 +445,12 @@ namespace RentAll_Pro_Web.Migrations
                     b.Navigation("Service");
                 });
 
-            modelBuilder.Entity("RentAll_Pro_web.Data.Models.Customer", b =>
+            modelBuilder.Entity("RentAll_Pro_Web.Data.Models.Customer", b =>
                 {
                     b.Navigation("Rentals");
                 });
 
-            modelBuilder.Entity("RentAll_Pro_web.Data.Models.Device", b =>
+            modelBuilder.Entity("RentAll_Pro_Web.Data.Models.Device", b =>
                 {
                     b.Navigation("FinancialDevices");
 
@@ -459,22 +459,22 @@ namespace RentAll_Pro_Web.Migrations
                     b.Navigation("ServiceDevices");
                 });
 
-            modelBuilder.Entity("RentAll_Pro_web.Data.Models.DeviceType", b =>
+            modelBuilder.Entity("RentAll_Pro_Web.Data.Models.DeviceType", b =>
                 {
                     b.Navigation("Devices");
                 });
 
-            modelBuilder.Entity("RentAll_Pro_web.Data.Models.Financial", b =>
+            modelBuilder.Entity("RentAll_Pro_Web.Data.Models.Financial", b =>
                 {
                     b.Navigation("FinancialDevices");
                 });
 
-            modelBuilder.Entity("RentAll_Pro_web.Data.Models.Rental", b =>
+            modelBuilder.Entity("RentAll_Pro_Web.Data.Models.Rental", b =>
                 {
                     b.Navigation("RentalDevices");
                 });
 
-            modelBuilder.Entity("RentAll_Pro_web.Data.Models.Service", b =>
+            modelBuilder.Entity("RentAll_Pro_Web.Data.Models.Service", b =>
                 {
                     b.Navigation("ServiceDevices");
                 });

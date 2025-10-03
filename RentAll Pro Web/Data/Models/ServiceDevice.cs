@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using RentAll_Pro_web.Data.Models; // <-- Ezt a sort is ellenőrizzük
+using RentAll_Pro_Web.Data.Models; // <-- Ezt a sort is ellenőrizzük
 
-namespace RentAll_Pro_web.Data.Models
+namespace RentAll_Pro_Web.Data.Models
 {
     public class ServiceDevice
     {

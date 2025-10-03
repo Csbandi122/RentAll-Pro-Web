@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using RentAll_Pro_web.Data;
-using RentAll_Pro_web.Data.Models;
+using RentAll_Pro_Web.Data;
+using RentAll_Pro_Web.Data.Models;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
 
-namespace RentAll_Pro_web.Controllers
+namespace RentAll_Pro_Web.Controllers
 {
     public class DevicesController : Controller
     {

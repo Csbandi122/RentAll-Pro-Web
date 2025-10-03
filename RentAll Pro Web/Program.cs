@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using RentAll_Pro_web.Data; // <-- Itt a javítás a régi 'ToolRental' helyett
+using RentAll_Pro_Web.Data; // <-- Itt a javítás a régi 'ToolRental' helyett
 
 var builder = WebApplication.CreateBuilder(args);
 

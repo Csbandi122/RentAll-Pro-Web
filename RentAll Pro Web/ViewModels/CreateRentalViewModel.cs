@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using RentAll_Pro_web.Data.Models;
+using RentAll_Pro_Web.Data.Models;
 using System.Collections.Generic;
 
-namespace RentAll_Pro_web.ViewModels
+namespace RentAll_Pro_Web.ViewModels
 {
     public class CreateRentalViewModel
     {

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace RentAll_Pro_web.Data.Models
+namespace RentAll_Pro_Web.Data.Models
 {
     public class Service
     {

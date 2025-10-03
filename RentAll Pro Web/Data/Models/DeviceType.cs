@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace RentAll_Pro_web.Data.Models
+namespace RentAll_Pro_Web.Data.Models
 {
     public class DeviceType
     {
